@@ -1,0 +1,1 @@
+"""SafeSurf application package."""

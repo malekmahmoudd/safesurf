@@ -1,0 +1,11 @@
+.env
+.git
+.venv
+venv
+Include
+Lib
+Scripts
+share
+__pycache__
+.ipynb_checkpoints
+src/workflow.ipynb
