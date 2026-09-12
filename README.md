@@ -22,4 +22,4 @@ The chat interface can be deployed separately to Vercel. It stays intentionally 
 
 `START → VirusTotal safety check → Groq response | fallback → END`
 
-The workflow fails closed: invalid URLs, missing configuration, unavailable reputation checks, and reported malicious or suspicious detections never reach the LLM. A clean result is not a guarantee that a website is safe.
+The workflow fails closed: invalid URLs, missing configuration, unavailable reputation checks, and reported malicious or suspicious detections never reach the LLM. It uses VirusTotal's existing URL report lookup rather than waiting for an asynchronous scan. A clean result is not a guarantee that a website is safe.

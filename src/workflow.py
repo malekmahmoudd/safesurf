@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+import base64
 import os
-import time
 from typing import Literal
 from urllib.parse import urlparse
 
@@ -33,33 +33,20 @@ def safety_check(state: WorkflowState) -> WorkflowState:
     if not api_key:
         return {"safety_status": "unsafe", "safety_reason": "The website safety service is not configured."}
 
-    headers = {"x-apikey": api_key}
+    url_id = base64.urlsafe_b64encode(url.encode()).decode().rstrip("=")
+    endpoint = f"https://www.virustotal.com/api/v3/urls/{url_id}"
     try:
-        submission = requests.post("https://www.virustotal.com/api/v3/urls", headers=headers, data={"url": url}, timeout=10)
-        submission.raise_for_status()
-        analysis_id = submission.json()["data"]["id"]
-        result = _wait_for_analysis(analysis_id, headers)
+        response = requests.get(endpoint, headers={"x-apikey": api_key}, timeout=10)
+        response.raise_for_status()
+        result = response.json()
     except (requests.RequestException, KeyError, ValueError):
         return {"safety_status": "unsafe", "safety_reason": "The website could not be verified right now. Please try again later."}
 
-    stats = result.get("data", {}).get("attributes", {}).get("stats", {})
+    stats = result.get("data", {}).get("attributes", {}).get("last_analysis_stats", {})
     malicious, suspicious = int(stats.get("malicious", 0)), int(stats.get("suspicious", 0))
     if malicious or suspicious:
         return {"safety_status": "unsafe", "safety_reason": f"VirusTotal reported {malicious} malicious and {suspicious} suspicious detections."}
     return {"safety_status": "safe", "safety_reason": "No malicious or suspicious detections were reported by VirusTotal."}
-
-
-def _wait_for_analysis(analysis_id: str, headers: dict[str, str]) -> dict:
-    """Poll the VirusTotal analysis until it completes, with a bounded wait."""
-    endpoint = f"https://www.virustotal.com/api/v3/analyses/{analysis_id}"
-    for _ in range(6):
-        response = requests.get(endpoint, headers=headers, timeout=10)
-        response.raise_for_status()
-        result = response.json()
-        if result.get("data", {}).get("attributes", {}).get("status") == "completed":
-            return result
-        time.sleep(2)
-    raise requests.Timeout("VirusTotal did not finish the analysis in time")
 
 
 def route_after_safety(state: WorkflowState) -> Literal["generate_response", "fallback"]:
@@ -68,7 +55,7 @@ def route_after_safety(state: WorkflowState) -> Literal["generate_response", "fa
 
 def generate_response(state: WorkflowState) -> WorkflowState:
     """Call Groq only after the reputation check has passed."""
-    model = ChatGroq(model="llama3-8b-8192", temperature=0)
+    model = ChatGroq(model="openai/gpt-oss-20b", temperature=0)
     transcript = "\n".join(
         f"{item['role'].title()}: {item['content']}"
         for item in state.get("history", [])[-12:]
