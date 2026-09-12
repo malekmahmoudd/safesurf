@@ -16,6 +16,8 @@ The included `Dockerfile` runs the product on any container host. Configure thes
 - `VIRUSTOTAL_API_KEY`
 - `GROQ_API_KEY`
 
+The chat interface can be deployed separately to Vercel. It stays intentionally free of API keys and needs the API service available at the same `/api/check` route or through a production proxy.
+
 ## Safety flow
 
 `START → VirusTotal safety check → Groq response | fallback → END`
