@@ -1,10 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "outputDirectory": "src/static",
+  "outputDirectory": "frontend/public",
   "rewrites": [
     {
       "source": "/static/:path*",
       "destination": "/:path*"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "https://langgraph-test-production.up.railway.app/api/:path*"
+    },
+    {
+      "source": "/",
+      "destination": "/static/index.html"
     }
   ]
 }
