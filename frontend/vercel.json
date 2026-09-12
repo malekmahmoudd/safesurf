@@ -5,6 +5,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://langgraph-test-production.up.railway.app/api/:path*"
+    },
+    {
+      "source": "/",
+      "destination": "/static/index.html"
     }
   ]
 }
