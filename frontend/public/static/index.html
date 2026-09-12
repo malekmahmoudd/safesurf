@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A safer way to ask questions about a website." />
+    <title>SafeSurf — Website safety chat</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="app-frame">
+      <aside class="rail">
+        <a class="logo" href="/"><span class="logo-orbit">◒</span><span>SafeSurf</span></a>
+        <button id="new-chat" class="new-chat"><span>＋</span> New chat</button>
+        <div class="nav-section"><p>Recent</p><button class="thread active"><span class="thread-icon">◌</span><span id="thread-name">New website check</span><span class="more">•••</span></button></div>
+        <div class="rail-bottom"><div class="privacy-pill"><span class="lock">⌁</span><div><strong>Private session</strong><small>Not saved after you leave</small></div></div><button class="settings">⚙ Settings</button></div>
+      </aside>
+
+      <main class="workspace">
+        <header class="chat-header">
+          <div class="chat-title"><div class="bot-avatar">S</div><div><h1>Website safety assistant</h1><p>Reputation-gated conversation</p></div></div>
+          <button id="toggle-report" class="icon-button" aria-label="Toggle safety report">▣</button>
+        </header>
+
+        <section id="messages" class="messages" aria-live="polite">
+          <div class="intro-card">
+            <div class="intro-symbol">✦</div>
+            <p class="kicker">SAFER BROWSING, BY DESIGN</p>
+            <h2>Start with a site.<br>Then ask anything.</h2>
+            <p class="intro-copy">Before every response, SafeSurf checks the website's reputation with VirusTotal. A risky or unverifiable site never reaches the AI.</p>
+            <div class="prompt-grid"><button type="button" data-prompt="What should I consider before using this website?"><span>◴</span> Is this worth using?</button><button type="button" data-prompt="What privacy questions should I ask before signing up?"><span>⌘</span> Privacy checklist</button><button type="button" data-prompt="What are common signs that a website could be misleading?"><span>◇</span> Spot warning signs</button></div>
+          </div>
+        </section>
+
+        <section class="composer-area">
+          <form id="url-form" class="site-bar"><span class="site-bar-icon">⌁</span><input id="website_url" name="website_url" type="url" placeholder="Paste a website URL to begin" autocomplete="url" required /><button type="submit">Set website</button></form>
+          <form id="chat-form" class="chat-composer"><textarea id="user_request" name="user_request" rows="1" maxlength="1000" placeholder="Ask a question about the website…" required></textarea><button id="send-button" type="submit" aria-label="Send message">↑</button></form>
+          <p class="composer-note">SafeSurf can make mistakes. Verify important decisions independently.</p>
+        </section>
+      </main>
+
+      <aside id="report" class="report-panel">
+        <div class="report-heading"><div><p class="eyebrow">REPUTATION REPORT</p><h2>Website status</h2></div><button id="close-report" class="mobile-close" aria-label="Close report">×</button></div>
+        <div class="site-card"><div class="site-favicon">◒</div><div><strong id="report-domain">No website selected</strong><span id="report-url">Add a URL to start a check</span></div></div>
+        <div id="report-state" class="report-state neutral"><div class="state-icon">—</div><div><strong>Waiting to check</strong><p>We’ll verify the URL when you send your first message.</p></div></div>
+        <div class="report-list"><div><span>Provider</span><strong>VirusTotal</strong></div><div><span>AI access</span><strong id="llm-access">Locked</strong></div><div><span>Scan policy</span><strong>Fail closed</strong></div></div>
+        <div class="report-foot"><span>ⓘ</span><p>A clear result is not a guarantee of safety. It means no malicious or suspicious detections were reported.</p></div>
+      </aside>
+    </div>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
